@@ -1,0 +1,43 @@
+{
+  "name": "linguist-sense",
+  "version": "1.0.0",
+  "description": "Lightweight JavaScript wrapper for GitHub Linguist’s language detection. Detects programming languages via file extensions and file content using Linguist’s official language definitions.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "nodemon --watch src --exec \"npm run build\"",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rainymy/linguist-sense.git"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "keywords": [
+    "linguist",
+    "language-detection",
+    "file-language",
+    "language-identifier",
+    "github-linguist",
+    "programming-languages",
+    "extension-detection",
+    "file-content-detection",
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Rainymy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rainymy/linguist-sense/issues"
+  },
+  "homepage": "https://github.com/Rainymy/linguist-sense",
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "esbuild": "^0.25.3",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3"
+  }
+}

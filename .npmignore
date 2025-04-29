@@ -1,0 +1,15 @@
+!dist/
+
+
+build/
+node_modules/
+src/
+test/
+
+
+index.js
+tsconfig.json
+
+
+.env
+.DS_Store
