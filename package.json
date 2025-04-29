@@ -2,12 +2,25 @@
   "name": "linguist-sense",
   "version": "1.0.0",
   "description": "Lightweight JavaScript wrapper for GitHub Linguist’s language detection. Detects programming languages via file extensions and file content using Linguist’s official language definitions.",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "type": "commonjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "node build.js",
-    "dev": "nodemon --watch src --exec \"npm run build\"",
-    "prepare": "npm run build"
+    "===================== build ======================": "",
+    "build": "npm run build:bundle",
+    "dev": "node ./build/watch.mjs",
+    "====================== npm =======================": "",
+    "package-test": "npm pack --dry-run",
+    "package": "npm pack",
+    "prepack": "npm run build && npm run docs:generate",
+    "====================== docs ======================": "",
+    "docs:generate": "tsc",
+    "===================== utils ======================": "",
+    "build:clean": "node ./build/cleanOutput.mjs -f dist",
+    "build:bundle": "node ./build/esbuild.mjs",
+    "===================== testing ====================": "",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -37,7 +50,10 @@
   "devDependencies": {
     "@types/node": "^22.15.3",
     "esbuild": "^0.25.3",
-    "nodemon": "^3.1.10",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "oniguruma-to-es": "^4.3.1",
+    "yaml": "^2.7.1"
   }
 }
