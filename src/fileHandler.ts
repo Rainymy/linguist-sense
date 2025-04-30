@@ -1,5 +1,16 @@
 import fs from "node:fs";
 
+export function fileExists(path: fs.PathLike): Promise<boolean> {
+  return new Promise((resolve) => {
+    fs.open(path, "r", (err, fd) => {
+      if (err) {
+        return resolve(false);
+      }
+      fs.close(fd, () => { resolve(true); });
+    });
+  });
+}
+
 export function customReadStream(filePathFs: fs.PathLike): Promise<string | null> {
   return new Promise((resolve) => {
     const data: Buffer[] = [];

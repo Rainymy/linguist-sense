@@ -1,7 +1,6 @@
 export declare const LinguistLanguages: Record<string, Language>;
 
 export interface Language {
-  name: string
   type: string
   color?: string
   extensions?: string[]
@@ -17,4 +16,9 @@ export interface Language {
   wrap?: boolean
   fs_name?: string
   searchable?: boolean
+}
+
+export interface RetreiveLanguage {
+  name: string,
+  language: Language
 }

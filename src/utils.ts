@@ -1,11 +1,31 @@
 import type { PathLike } from "node:fs";
-import type { DetectLanguage } from "./detect";
-import type { Language } from "../language/language";
+import type { DetectLanguage, SimpleStats, DETECTION_ERROR_TYPE } from "./detect";
+import type { RetreiveLanguage } from "../language/language";
 
 export function detectedLanguage(
-  lang: Language | null,
-  path: PathLike | null,
-  error: string | null
+  lang: RetreiveLanguage | null, path: PathLike | null, error: DETECTION_ERROR_TYPE | null
 ): DetectLanguage {
-  return { language: lang, path: path, error: error }
+  return {
+    name: lang?.name ?? null,
+    language: lang?.language ?? null,
+    path: path,
+    error: error
+  }
+}
+
+export function languagesSimpleStat(langs: DetectLanguage[]): SimpleStats {
+  const uniqueLanguages = [...new Set(langs.map(d => d.name!))];
+
+  return {
+    languages: uniqueLanguages,
+    count: uniqueLanguages.length
+  }
+}
+
+export function filterByLanguage(langs: DetectLanguage[], language: string) {
+  return langs.filter(val => {
+    const langName = val.name === language;
+    const fsName = val.language?.fs_name === language;
+    return langName || fsName;
+  });
 }

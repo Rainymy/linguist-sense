@@ -6,10 +6,10 @@
 const options = {
   entryPoints: ['./index.ts'],
   platform: 'node',
-  bundle: false,
+  bundle: true,
   minify: false,
   minifyIdentifiers: false,
-  minifySyntax: true,
+  minifySyntax: false,
   logLevel: "info",
 }
 

@@ -1,10 +1,69 @@
+import { readdirSync, type PathLike } from "node:fs";
 
-export function detectByExtension(filename: string): Language | null {
-  // TODO: Your extension detection logic
-  return null;
+import type { DetectLanguage, LanguageDetection } from "./src/detect";
+import { DETECTION_ERROR } from "./src/detect";
+import { getLanguage } from "./src/detectLanguage";
+import { fileExists } from "./src/fileHandler";
+import {
+  detectedLanguage,
+  filterByLanguage,
+  languagesSimpleStat
+} from "./src/utils";
+
+/**
+ * Applies heuristic analysis to determine the correct language when the file extension is ambiguous.
+ *
+ * @note
+ * - When a file extension maps to multiple possible languages.
+ * - This function loads the file content and compares it against known heuristics for each candidate language.
+ */
+export async function detectLanguage(filePath: PathLike): Promise<DetectLanguage> {
+  if (!fileExists(filePath)) {
+    return detectedLanguage(null, filePath, DETECTION_ERROR.FILE_NOT_FOUND);
+  }
+
+  const language = await getLanguage(filePath);
+
+  if (language === undefined) {
+    return detectedLanguage(null, filePath, DETECTION_ERROR.UNKNOWN_LANGUAGE);
+  }
+
+  return detectedLanguage(language, filePath, null);
 }
 
-export function detectByContent(fileContent: string): Language | null {
-  // TODO: Your content detection logic
-  return null;
+export async function detectLanguagesInFiles(files: PathLike[]): Promise<LanguageDetection> {
+  const detectedLanguages: DetectLanguage[] = [];
+  const failedLanguages: DetectLanguage[] = [];
+
+  for (const file of files) {
+    const detected = await detectLanguage(file);
+    if (detected.error) {
+      failedLanguages.push(detected);
+      continue;
+    }
+    detectedLanguages.push(detected);
+  }
+
+  return {
+    detected: detectedLanguages,
+    failed: failedLanguages
+  }
 }
+
+// (async () => {
+//   for (const hell of readdirSync("./src")) {
+//     const value = await detectLanguage(hell);
+//     console.log(value)
+//     if (value.error === null) {
+//       console.log("im fine")
+//     }
+//     if (value.error === "UNKNOWN_LANGUAGE") {
+//       console.log("idk what language", value.path);
+//     }
+//     if (value.error === DETECTION_ERROR.FILE_NOT_FOUND) {
+//       console.log("dasd")
+//     }
+//   }
+// })();
+
+export { filterByLanguage, languagesSimpleStat, DETECTION_ERROR }
