@@ -13,7 +13,7 @@ export interface LanguageDetection {
 }
 
 export const DETECTION_ERROR = {
-  FILE_NOT_FOUND: "FILE_NOT_FOUND",
+  FILE_ERROR: "FILE_ERROR",
   UNKNOWN_LANGUAGE: "UNKNOWN_LANGUAGE",
 } as const;
 

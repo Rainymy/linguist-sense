@@ -32,12 +32,12 @@ export async function detectLanguage(filePath: PathLike): Promise<[DetectLanguag
   const content = await customReadStream(filePath);
   if (content instanceof Error) {
     return [
-      detectedLanguage(null, filePath), DETECTION_ERROR.FILE_NOT_FOUND
+      detectedLanguage(null, filePath), DETECTION_ERROR.FILE_ERROR
     ];
   }
 
   const contentLanguage = detectByContent(content, extensionLanguages);
-  if (contentLanguage === undefined) {
+  if (!contentLanguage) {
     return [
       detectedLanguage(null, filePath), DETECTION_ERROR.UNKNOWN_LANGUAGE
     ];
