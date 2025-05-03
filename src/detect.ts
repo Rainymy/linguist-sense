@@ -1,5 +1,5 @@
 import type { PathLike } from "node:fs";
-import type { Language } from "../language/language";
+import type { Language } from "../types/language";
 
 export interface DetectLanguage {
   name: string | null;

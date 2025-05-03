@@ -53,6 +53,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "esbuild-plugin-yaml": "^0.0.1",
     "oniguruma-to-es": "^4.3.1",
     "yaml": "^2.7.1"
   }

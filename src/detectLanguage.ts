@@ -4,7 +4,7 @@ import type { PathLike } from "node:fs";
 import { languages } from "../language/provider";
 import { disambiguations } from "./disambiguations";
 
-import type { RetreiveLanguage } from "../language/language";
+import type { RetreiveLanguage } from "../types/language";
 
 export async function getLanguage(filePath: PathLike): Promise<RetreiveLanguage | undefined> {
   const dotExt = path.extname(path.basename(filePath.toString()));

@@ -4,11 +4,12 @@ import { customReadStream } from "./fileHandler";
 import { toRegExp } from "oniguruma-to-es";
 
 import { heuristics } from "../language/provider";
-import type { RulesEntity, NamedPatterns } from "../language/heuristics";
+import type { RulesEntity, NamedPatterns } from "../types/heuristics";
 
 export async function disambiguations(ext: string, filePath: fs.PathLike) {
   const fileContent = await customReadStream(filePath);
   if (!fileContent) {
+    // FAILED TO READ FILE
     return null;
   }
 
@@ -28,7 +29,9 @@ export async function disambiguations(ext: string, filePath: fs.PathLike) {
 
 function parseRules(rules: RulesEntity, fileContent: string): boolean {
   if (rules.and) {
-    const subRules = rules.and.map(sRule => parseRules(sRule, fileContent));
+    const subRules = rules.and.map(sRule => {
+      return parseRules(sRule as RulesEntity, fileContent);
+    });
     return subRules.every(val => val);
   }
   if (rules.pattern) {

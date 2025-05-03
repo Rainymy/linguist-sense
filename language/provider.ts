@@ -1,18 +1,8 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
+import type { Heuristics } from "../types/heuristics";
+import type { LinguistLanguages } from "../types/language";
 
-import { parse } from "yaml";
+import LanguageFile from "./languages.yml";
+import HeuristicsFile from "./heuristics.yml";
 
-import type { Heuristics } from "./heuristics";
-import type { LinguistLanguages } from "./language";
-
-const LanguageFilename = "languages.yml";
-const HeuristicsFilename = "heuristics.yml";
-
-function readYML(filename: string) {
-  const content = readFileSync(path.join(__dirname, filename), "utf8");
-  return parse(content);
-}
-
-export const languages: typeof LinguistLanguages = readYML(LanguageFilename);
-export const heuristics: Heuristics = readYML(HeuristicsFilename);
+export const languages: typeof LinguistLanguages = LanguageFile;
+export const heuristics: Heuristics = HeuristicsFile;

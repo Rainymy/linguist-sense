@@ -1,6 +1,6 @@
 import { build } from "esbuild";
 
-import { cjs_config, esm_config } from "./configs.mjs";
+import { cjs_config, esm_config } from "./configs.cjs";
 
 async function main() {
   await build(cjs_config);

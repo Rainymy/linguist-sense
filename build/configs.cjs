@@ -1,3 +1,5 @@
+const { yamlPlugin } = require("esbuild-plugin-yaml");
+
 /**
 * @typedef {import("esbuild").BuildOptions} BuildOptions
 */
@@ -11,17 +13,20 @@ const options = {
   minifyIdentifiers: false,
   minifySyntax: false,
   logLevel: "info",
+  plugins: [yamlPlugin()]
 }
 
 /** @type {BuildOptions} */
-export const cjs_config = {
+const cjs_config = {
   ...options,
   format: 'cjs',
   outfile: './dist/index.cjs'
 }
 /** @type {BuildOptions} */
-export const esm_config = {
+const esm_config = {
   ...options,
   format: 'esm',
   outfile: './dist/index.mjs',
 }
+
+module.exports = { cjs_config, esm_config }

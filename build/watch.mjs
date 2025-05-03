@@ -1,6 +1,6 @@
 import { context } from "esbuild";
 
-import { cjs_config } from "./configs.mjs";
+import { cjs_config } from "./configs.cjs";
 
 async function main() {
   (await context(cjs_config)).watch();
