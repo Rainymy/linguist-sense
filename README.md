@@ -1,12 +1,24 @@
-# linguist-sense
-
-Lightweight [gitHub-linguist](https://github.com/github-linguist/linguist) powered language detection for Node.js
-
-Detect languages from file extensions and content using the official linguist definitions.
+# What is linguist-sense?
 
 ---
 
-# Usage example 1
+> Lightweight language detection in Node.js using [gitHub-linguist](https://github.com/github-linguist/linguist)'s official language definitions.
+
+Detect languages from file extensions and file content using the official linguist definitions.
+
+---
+
+## 🚀 Features
+- Detect languages from **file paths** or **file contents**
+- Uses **GitHub Linguist's** `languages.yml` & `heuristics.yml`
+- Zero dependencies for core logic
+- Works with CommonJS and ESM
+
+---
+
+## 🧪 Usage
+
+### 1. High-Level Detection
 ```js
 const path = require("node:path");
 const { detectLanguage, DETECTION_ERROR } = require("linguist-sense");
@@ -21,43 +33,52 @@ if (error === DETECTION_ERROR.FILE_ERROR) {
   console.log("File not found", value.path);
 }
 if (error === null) {
-  console.log(value.name, value); // detected language
+  console.log(value.name, value); // e.g., "TypeScript"
 }
 ```
 
-# Usage example 2
+---
+
+### 2. Extension & Content-Based Detection
 ```js
-(async () => {
-  const path = require("node:path");
-  const fs = require("node:fs");
-  const { detectByExtension, detectByContent } = require("linguist-sense");
+const path = require("node:path");
+const fs = require("node:fs");
+const { detectByExtension, detectByContent } = require("linguist-sense");
 
-  const filepath = path.join(__dirname, "./config.json"); // input file
-  const languages = detectByExtension(filepath); // [ <detected languages> ]
+const filepath = path.join(__dirname, "./index.ts");
 
-  if (languages.length === 0) {
-    console.log("No Language Detected!!!");
-    return;
-  }
+// Detect by extension
+const candidates = detectByExtension(filepath); // [ <detected languages> ]
 
-  if (languages.length === 1) {
-    console.log("language found!", languages[0]);
-    return;
-  }
+if (candidates.length === 0) {
+  console.log("No language detected by extension.");
+  return;
+}
 
-  // There might be a language with same extensions.
-  const fileContent = fs.readFileSync(filepath);
-  const detected = detectByContent(fileContent, languages /* optional but preferred */);
+if (candidates.length === 1) {
+  console.log("Detected language:", candidates[0]);
+  return;
+}
 
-  if (detected === null) {
-    console.log("Unable to distingué the language");
-    return;
-  }
+// Multiple possible languages (same extension)
+// Detect by content to resolve ambiguity
+const fileContent = fs.readFileSync(filepath);
+const detected = detectByContent(fileContent, candidates /* optional but preferred */);
 
-  detected; // { name, language }
-})();
-
+if (detected) {
+  console.log("Final language:", detected.name); // { name, language }
+}
+else {
+  console.log("Unable to determine language from content.");
+}
 ```
 
-# Language Definitions
-We use the exact definitions from [linguist/languages.yml](https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml), so the results are consistent with GitHub's own language classifier.
+---
+
+## 📘 Language Definitions
+This package uses the exact language definitions and heuristics from GitHub Linguist:
+
+- [`languages.yml`](https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml)
+- [`heuristics.yml`](https://github.com/github-linguist/linguist/blob/main/lib/linguist/heuristics.yml)
+
+That means your results match what GitHub shows in your repo file browser.

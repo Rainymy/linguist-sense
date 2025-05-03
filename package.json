@@ -32,14 +32,10 @@
   "keywords": [
     "linguist",
     "language-detection",
-    "file-language",
     "language-identifier",
     "github-linguist",
-    "programming-languages",
     "extension-detection",
-    "file-content-detection",
-    "nodejs",
-    "javascript"
+    "file-content-detection"
   ],
   "author": "Rainymy",
   "license": "MIT",
