@@ -4,13 +4,7 @@ import type { Language } from "../types/language";
 export interface DetectLanguage {
   name: string | null;
   language: Language | null;
-  error: DETECTION_ERROR_TYPE | null;
-  path: PathLike | null;
-}
-
-export interface SimpleStats {
-  languages: string[];
-  count: number;
+  path: PathLike;
 }
 
 export interface LanguageDetection {

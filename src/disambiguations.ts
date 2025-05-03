@@ -1,28 +1,15 @@
-import fs from "node:fs";
-
-import { customReadStream } from "./fileHandler";
 import { toRegExp } from "oniguruma-to-es";
 
 import { heuristics } from "../language/provider";
 import type { RulesEntity, NamedPatterns } from "../types/heuristics";
 
-export async function disambiguations(ext: string, filePath: fs.PathLike) {
-  const fileContent = await customReadStream(filePath);
-  if (fileContent instanceof Error) {
-    console.log(fileContent)
-    // FAILED TO READ FILE
-    return null;
-  }
-
-
+export function disambiguations(fileContent: string) {
   for (const disambiguation of heuristics.disambiguations) {
-    if (!disambiguation.extensions.includes(ext)) { continue; }
-
     for (const rule of disambiguation.rules) {
-      if (!parseRules(rule, fileContent)) {
-        continue;
+      // match against rule set and return if true.
+      if (parseRules(rule, fileContent)) {
+        return rule;
       }
-      return rule;
     }
   }
 

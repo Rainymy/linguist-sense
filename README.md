@@ -8,17 +8,20 @@ Detect languages from file extensions and content using the official linguist de
 
 # Usage
 ```js
-const { detectByExtension, detectByContent } = require('linguist-sense');
+const { detectLanguage, DETECTION_ERROR } = require("linguist-sense");
+const path = require("path");
 
-// By file extension
-const lang1 = detectByExtension("index.ts");
-console.log(lang1); // { name: 'TypeScript', extensions: ['.ts', '.tsx'], ... }
-
-// By file content
-const fs = require("node:fs");
-const code = fs.readFileSync("./snake.py", "utf8");
-const lang2 = detectByContent(code);
-console.log(lang2); // { name: 'Python', ... }
+const value = await detectLanguage(path.join(__dirname, "./hello.py"));
+if (value.error !== null) {
+  console.log("unknown error found: ", value.error);
+}
+if (value.error === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
+  console.log("unknown language: ", value.path);
+}
+if (value.error === DETECTION_ERROR.FILE_NOT_FOUND) {
+  console.log("file not found");
+}
+console.log(value); // detected language
 ```
 
 # Language Definitions

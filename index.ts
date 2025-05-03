@@ -1,14 +1,14 @@
 import { readdirSync, type PathLike } from "node:fs";
 
-import type { DetectLanguage, LanguageDetection } from "./src/detect";
+import type { DetectLanguage, LanguageDetection, DETECTION_ERROR_TYPE } from "./src/detect";
 import { DETECTION_ERROR } from "./src/detect";
-import { getLanguage } from "./src/detectLanguage";
-import { fileExists } from "./src/fileHandler";
-import {
-  detectedLanguage,
-  filterByLanguage,
-  languagesSimpleStat
-} from "./src/utils";
+
+import { detectByExtension } from "./src/detectByExtension";
+import { detectByContent } from "./src/detectByContent";
+
+import { languages } from "./language/provider"
+import { customReadStream } from "./src/fileHandler";
+import { detectedLanguage } from "./src/utils";
 
 /**
  * Applies heuristic analysis to determine the correct language when the file extension is ambiguous.
@@ -17,27 +17,52 @@ import {
  * - When a file extension maps to multiple possible languages.
  * - This function loads the file content and compares it against known heuristics for each candidate language.
  */
-export async function detectLanguage(filePath: PathLike): Promise<DetectLanguage> {
-  if (!fileExists(filePath)) {
-    return detectedLanguage(null, filePath, DETECTION_ERROR.FILE_NOT_FOUND);
+export async function detectLanguage(filePath: PathLike): Promise<[DetectLanguage, DETECTION_ERROR_TYPE | null]> {
+  const extensionLanguages = detectByExtension(filePath);
+
+  // check if there are multiple possible values
+  if (extensionLanguages.length === 1) {
+    const lang = languages[extensionLanguages[0]];
+    const detLang = { language: lang, name: extensionLanguages[0] }
+    return [
+      detectedLanguage(detLang, filePath), null
+    ];
   }
 
-  const language = await getLanguage(filePath);
-
-  if (language === undefined) {
-    return detectedLanguage(null, filePath, DETECTION_ERROR.UNKNOWN_LANGUAGE);
+  const content = await customReadStream(filePath);
+  if (content instanceof Error) {
+    return [
+      detectedLanguage(null, filePath), DETECTION_ERROR.FILE_NOT_FOUND
+    ];
   }
 
-  return detectedLanguage(language, filePath, null);
+  const contentLanguage = detectByContent(content);
+  if (contentLanguage === undefined) {
+    return [
+      detectedLanguage(null, filePath), DETECTION_ERROR.UNKNOWN_LANGUAGE
+    ];
+  }
+
+  return [
+    detectedLanguage(contentLanguage, filePath), null
+  ];
 }
 
+/**
+* Detects programming languages for multiple files
+* using extension and content
+*
+* @note This is a wrapper around the `detectLanguage` function.
+*
+* @param files - Array of file paths to analyze.
+*/
 export async function detectLanguagesInFiles(files: PathLike[]): Promise<LanguageDetection> {
   const detectedLanguages: DetectLanguage[] = [];
   const failedLanguages: DetectLanguage[] = [];
 
   for (const file of files) {
-    const detected = await detectLanguage(file);
-    if (detected.error) {
+    const [detected, error] = await detectLanguage(file);
+    if (error) {
       failedLanguages.push(detected);
       continue;
     }
@@ -50,24 +75,27 @@ export async function detectLanguagesInFiles(files: PathLike[]): Promise<Languag
   }
 }
 
-// (async () => {
-//   for (const hell of readdirSync("./src")) {
-//     const value = await detectLanguage("./src" + hell);
-//     if (value.error !== null) {
-//       console.log("unknown error found: ", value.error);
-//       continue;
-//     }
-//     if (value.error === "UNKNOWN_LANGUAGE") {
-//       console.log("unknown language: ", value.path);
-//       continue;
-//     }
-//     if (value.error === DETECTION_ERROR.FILE_NOT_FOUND) {
-//       console.log("file not found");
-//       continue;
-//     }
-//     console.log(value)
-//     break;
-//   }
-// })();
+(async () => {
+  const root = "E:/Documents - storage/GitHub/linguist-sense";
+  for (const hell of readdirSync(root)) {
+    const [value, error] = await detectLanguage(root + "/" + hell);
+    if (error === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
+      console.log("unknown language: ", value.path);
+      continue;
+    }
+    if (error === DETECTION_ERROR.FILE_NOT_FOUND) {
+      // console.log("file not found");
+      continue;
+    }
 
-export { filterByLanguage, languagesSimpleStat, DETECTION_ERROR }
+    console.log(value.name, value.path.toString().split("/").slice(-1));
+    if (value.name === "Roff") break;
+    // break;
+  }
+})();
+
+export {
+  detectByExtension,
+  detectByContent,
+  DETECTION_ERROR
+}
