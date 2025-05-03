@@ -1,4 +1,4 @@
-import { readdirSync, type PathLike } from "node:fs";
+import type { PathLike } from "node:fs";
 
 import type { DetectLanguage, LanguageDetection, DETECTION_ERROR_TYPE } from "./src/detect";
 import { DETECTION_ERROR } from "./src/detect";
