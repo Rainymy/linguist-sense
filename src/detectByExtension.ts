@@ -8,18 +8,17 @@ import { parseFilePath } from "./utils";
 * file extension using Linguist data.
 */
 export function detectByExtension(filePath: PathLike) {
-  const { dotExt, ext } = parseFilePath(filePath.toString());
+  const { dotExt, ext, basename } = parseFilePath(filePath.toString());
 
-  const similarLanguages = Object.keys(languages).filter(lang => {
+  return Object.keys(languages).filter(lang => {
     const { extensions, aliases, filenames } = languages[lang];
-    const isExt = extensions?.includes(dotExt) ?? false;
-    const isAlias = aliases?.includes(ext) ?? false;
 
-    const isFilename = filenames?.includes(dotExt);
-    const isDotFilename = filenames?.includes(ext);
-
-    return isExt || isAlias || (isFilename || isDotFilename);
+    return (
+      extensions?.includes(dotExt) ||
+      aliases?.includes(ext) ||
+      filenames?.includes(dotExt) ||
+      filenames?.includes(ext) ||
+      filenames?.includes(basename)
+    );
   });
-
-  return similarLanguages;
 }

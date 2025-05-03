@@ -17,10 +17,10 @@ export function detectedLanguage(
 
 export function parseFilePath(filepath: string) {
   const filename = path.basename(filepath);
-  if (filename.startsWith(".")) {
-    return { dotExt: filename, ext: filename.substring(1) }
+  const ext = filename.startsWith('.') ? filename : path.extname(filename);
+  return {
+    dotExt: ext,
+    ext: ext.startsWith('.') ? ext.slice(1) : ext,
+    basename: filename,
   }
-
-  const ext = path.extname(filename);
-  return { dotExt: ext, ext: ext.substring(1) }
 }

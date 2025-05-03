@@ -36,7 +36,7 @@ export async function detectLanguage(filePath: PathLike): Promise<[DetectLanguag
     ];
   }
 
-  const contentLanguage = detectByContent(content);
+  const contentLanguage = detectByContent(content, extensionLanguages);
   if (contentLanguage === undefined) {
     return [
       detectedLanguage(null, filePath), DETECTION_ERROR.UNKNOWN_LANGUAGE
@@ -74,25 +74,6 @@ export async function detectLanguagesInFiles(files: PathLike[]): Promise<Languag
     failed: failedLanguages
   }
 }
-
-(async () => {
-  const root = "E:/Documents - storage/GitHub/linguist-sense";
-  for (const hell of readdirSync(root)) {
-    const [value, error] = await detectLanguage(root + "/" + hell);
-    if (error === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
-      console.log("unknown language: ", value.path);
-      continue;
-    }
-    if (error === DETECTION_ERROR.FILE_NOT_FOUND) {
-      // console.log("file not found");
-      continue;
-    }
-
-    console.log(value.name, value.path.toString().split("/").slice(-1));
-    if (value.name === "Roff") break;
-    // break;
-  }
-})();
 
 export {
   detectByExtension,
