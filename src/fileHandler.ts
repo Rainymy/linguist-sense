@@ -11,14 +11,14 @@ export function fileExists(path: fs.PathLike): Promise<boolean> {
   });
 }
 
-export function customReadStream(filePathFs: fs.PathLike): Promise<string | null> {
+export function customReadStream(filePathFs: fs.PathLike): Promise<string | Error> {
   return new Promise((resolve) => {
     const data: Buffer[] = [];
 
     const readStream = fs.createReadStream(filePathFs, { flags: "r" });
     readStream.on("data", (chunks) => { data.push(Buffer.from(chunks)) });
     readStream.on("end", () => resolve(Buffer.concat(data).toString()));
-    readStream.on("error", () => resolve(null));
+    readStream.on("error", (error) => resolve(error));
   });
 }
 

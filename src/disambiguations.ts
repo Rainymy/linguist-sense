@@ -8,10 +8,12 @@ import type { RulesEntity, NamedPatterns } from "../types/heuristics";
 
 export async function disambiguations(ext: string, filePath: fs.PathLike) {
   const fileContent = await customReadStream(filePath);
-  if (!fileContent) {
+  if (fileContent instanceof Error) {
+    console.log(fileContent)
     // FAILED TO READ FILE
     return null;
   }
+
 
   for (const disambiguation of heuristics.disambiguations) {
     if (!disambiguation.extensions.includes(ext)) { continue; }

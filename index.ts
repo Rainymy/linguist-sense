@@ -52,17 +52,20 @@ export async function detectLanguagesInFiles(files: PathLike[]): Promise<Languag
 
 // (async () => {
 //   for (const hell of readdirSync("./src")) {
-//     const value = await detectLanguage(hell);
-//     // console.log(value)
-//     if (value.error === null) {
-//       console.log("no error");
+//     const value = await detectLanguage("./src" + hell);
+//     if (value.error !== null) {
+//       console.log("unknown error found: ", value.error);
+//       continue;
 //     }
 //     if (value.error === "UNKNOWN_LANGUAGE") {
 //       console.log("unknown language: ", value.path);
+//       continue;
 //     }
 //     if (value.error === DETECTION_ERROR.FILE_NOT_FOUND) {
 //       console.log("file not found");
+//       continue;
 //     }
+//     console.log(value)
 //     break;
 //   }
 // })();
