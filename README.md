@@ -1,24 +1,29 @@
-# What is linguist-sense?
+# linguist-sense
+
+[![npm version](https://img.shields.io/npm/v/linguist-sense)](https://www.npmjs.com/package/linguist-sense)
+[![npm downloads](https://img.shields.io/npm/dw/linguist-sense)](https://www.npmjs.com/package/linguist-sense)
 
 ---
 
-> Lightweight language detection in Node.js using [gitHub-linguist](https://github.com/github-linguist/linguist)'s official language definitions.
+> Lightweight language detection in Node.js using [GitHub Linguist](https://github.com/github-linguist/linguist)'s official language definitions.
 
 Detect languages from file extensions and file content using the official linguist definitions.
 
 ---
 
 ## 🚀 Features
-- Detect languages from **file paths** or **file contents**
-- Uses **GitHub Linguist's** `languages.yml` & `heuristics.yml`
-- Zero dependencies for core logic
-- Works with CommonJS and ESM
+- 📣 Detect languages from **file paths** or **file contents**
+- ⚡ Zero dependencies for core logic
+- 🔧 Works with **CommonJS** and **ESM**. Compiled to **ES2018 (ES9)**
+- 🌳 Fully tree-shakeable for minimal bundles (not bundled, e.g not minified)
 
 ---
 
 ## 🧪 Usage
 
 ### 1. High-Level Detection
+The `detectLanguage()` function returns `[value, error]`. Use this when you want a full result in one call.
+
 ```js
 const path = require("node:path");
 const { detectLanguage, DETECTION_ERROR } = require("linguist-sense");
@@ -40,6 +45,7 @@ if (error === null) {
 ---
 
 ### 2. Extension & Content-Based Detection
+Use this if you want more control.
 ```js
 const path = require("node:path");
 const fs = require("node:fs");
@@ -60,10 +66,9 @@ if (candidates.length === 1) {
   return;
 }
 
-// Multiple possible languages (same extension)
-// Detect by content to resolve ambiguity
+// Multiple possible matches — disambiguate with file content
 const fileContent = fs.readFileSync(filepath);
-const detected = detectByContent(fileContent, candidates /* optional but preferred */);
+const detected = detectByContent(fileContent, candidates /* optional but recommended */);
 
 if (detected) {
   console.log("Final language:", detected.name); // { name, language }
@@ -72,6 +77,18 @@ else {
   console.log("Unable to determine language from content.");
 }
 ```
+---
+
+## 📦 Package Design Notes
+
+### 📁 Why This Package Isn't Bundled
+This package is intentionally **not bundled**, in order to:
+- Make it easier to integrate into your bundlers (e.g., Webpack, Rollup, esbuild).
+- Support tree shaking, so unused logic can be excluded during bundling.
+
+### 🧬 Embedded language data
+- `languages.yml` & `heuristics.yml` are precompiled into JavaScript objects.
+- This explains the larger unpacked size, but ensures zero runtime file access and minimal overhead.
 
 ---
 

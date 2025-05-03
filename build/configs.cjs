@@ -8,10 +8,11 @@ const { yamlPlugin } = require("esbuild-plugin-yaml");
 const options = {
   entryPoints: ['./index.ts'],
   platform: 'node',
-  bundle: true,
+  target: ["es2018"],
+  bundle: false,
   minify: false,
   minifyIdentifiers: false,
-  minifySyntax: false,
+  minifySyntax: true,
   logLevel: "info",
   plugins: [yamlPlugin()]
 }
