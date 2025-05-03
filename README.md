@@ -6,22 +6,57 @@ Detect languages from file extensions and content using the official linguist de
 
 ---
 
-# Usage
+# Usage example 1
 ```js
+const path = require("node:path");
 const { detectLanguage, DETECTION_ERROR } = require("linguist-sense");
-const path = require("path");
 
-const value = await detectLanguage(path.join(__dirname, "./hello.py"));
-if (value.error !== null) {
-  console.log("unknown error found: ", value.error);
+const file = path.join(__dirname, "./index.ts"); // input file
+const [value, error] = await detectLanguage(file);
+
+if (error === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
+  console.log("Unknown language: ", value.path);
 }
-if (value.error === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
-  console.log("unknown language: ", value.path);
+if (error === DETECTION_ERROR.FILE_ERROR) {
+  console.log("File not found", value.path);
 }
-if (value.error === DETECTION_ERROR.FILE_NOT_FOUND) {
-  console.log("file not found");
+if (error === null) {
+  console.log(value.name, value); // detected language
 }
-console.log(value); // detected language
+```
+
+# Usage example 2
+```js
+(async () => {
+  const path = require("node:path");
+  const fs = require("node:fs");
+  const { detectByExtension, detectByContent } = require("linguist-sense");
+
+  const filepath = path.join(__dirname, "./config.json"); // input file
+  const languages = detectByExtension(filepath); // [ <detected languages> ]
+
+  if (languages.length === 0) {
+    console.log("No Language Detected!!!");
+    return;
+  }
+
+  if (languages.length === 1) {
+    console.log("language found!", languages[0]);
+    return;
+  }
+
+  // There might be a language with same extensions.
+  const fileContent = fs.readFileSync(filepath);
+  const detected = detectByContent(fileContent, languages /* optional but preferred */);
+
+  if (detected === null) {
+    console.log("Unable to distingué the language");
+    return;
+  }
+
+  detected; // { name, language }
+})();
+
 ```
 
 # Language Definitions
