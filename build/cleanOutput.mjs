@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from 'url';
 
 const F_ARG = '-f';
 const argFlagIndex = process.argv.findIndex(v => v === F_ARG);
@@ -8,8 +9,12 @@ if (argFlagIndex === -1) {
 }
 
 const OUTPUT_FOLDER = process.argv[argFlagIndex + 1];
-if (!output) {
+if (!OUTPUT_FOLDER) {
   throw new Error(`Argument value: ${F_ARG} <path> not found!`);
+}
+
+function getDirname(importMetaUrl) {
+  return path.dirname(fileURLToPath(importMetaUrl));
 }
 
 /**
@@ -17,13 +22,13 @@ if (!output) {
  * @returns {import('esbuild').Plugin}
  */
 function cleanUpOutputFolder(dist) {
-  const workingDirectory = path.join(__dirname, "..");
+  const workingDirectory = path.join(getDirname(import.meta.url), "..");
 
   const resolvedTarget = path.resolve(dist);
   const resolvedRoot = path.resolve(workingDirectory);
 
   // Safety check: ensure the folder is within the project root
-  if (!resolvedTarget.startsWith(resolvedRoot + sep)) {
+  if (!resolvedTarget.startsWith(resolvedRoot + path.sep)) {
     throw new Error(
       [
         "❌ Refusing to delete outside project root!",
