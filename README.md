@@ -12,10 +12,10 @@ Detect languages from file extensions and file content using the official lingui
 ---
 
 ## 🚀 Features
-- 📣 Detect languages from **file paths** or **file contents**
-- ⚡ Zero dependencies for core logic
-- 🔧 Works with **CommonJS** and **ESM**. Compiled to **ES2018 (ES9)**
-- 🌳 Fully tree-shakeable for minimal bundles (**NOT BUNDLED**, e.g not minified)
+- 📣 Detect languages from **file paths** or **file contents**.
+- ⚡ Just **one** runtime dependency — a PCRE-compatible regex parser.
+- 🔧 Works with **CommonJS** and **ESM**. Compiled to **ES2018 (ES9)**.
+- 🌳 Fully tree-shakeable for minimal bundles (**Not Bundled**).
 
 ---
 

@@ -54,12 +54,11 @@
   "devDependencies": {
     "@types/node": "^22.15.3",
     "esbuild": "^0.25.3",
+    "esbuild-plugin-yaml": "^0.0.1",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "esbuild-plugin-yaml": "^0.0.1",
-    "oniguruma-to-es": "^4.3.1",
-    "yaml": "^2.7.1"
+    "oniguruma-to-es": "^4.3.1"
   },
   "sideEffects": false,
   "engines": {
