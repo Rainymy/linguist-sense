@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": false,
     "strict": true,
+    "emitDeclarationOnly": true,
     "declarationMap": false,
     "allowJs": true,
     "checkJs": true
