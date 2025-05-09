@@ -12,19 +12,16 @@ import type { DetectLanguage } from "./detect";
  *  - otherwise detection accuracy may drop.
  *  - For example, "Roff" tends to match many inputs if no filter is applied.
  */
-export function detectByContent(content: Buffer | string, searchAt: string[] | DetectLanguage[]): DetectLanguage | null {
-  const searchFor = searchAt.map((item) => {
-    return typeof item === "string" ? item : item.name;
-  });
-
-  const disambiguate = disambiguations(content.toString(), searchFor);
+export function detectByContent(content: Buffer | string, searchAt: DetectLanguage[]): DetectLanguage | null {
+  const disambiguate = disambiguations(content.toString(), searchAt);
 
   if (!disambiguate) {
     return null;
   }
 
   return {
-    name: disambiguate.language,
-    language: languages[disambiguate.language]
+    name: disambiguate.rule.language,
+    language: languages[disambiguate.rule.language],
+    path: disambiguate.path
   }
 }
