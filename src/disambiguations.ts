@@ -5,8 +5,6 @@ import type { NamedPatterns, RulesEntity } from "../types/heuristics";
 
 export function disambiguations(fileContent: string, searchAt: string[]) {
   for (const disambiguation of heuristics.disambiguations) {
-    // if (!disambiguation.extensions.includes(ext)) { continue; }
-
     for (const rule of disambiguation.rules) {
       // skip all non-matching languages.
       if (!searchAt.includes(rule.language)) {

@@ -17,8 +17,3 @@ export interface Language {
   fs_name?: string
   searchable?: boolean
 }
-
-export interface RetreiveLanguage {
-  name: string,
-  language: Language
-}

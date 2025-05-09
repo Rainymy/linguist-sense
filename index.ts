@@ -1,18 +1,16 @@
 import type { PathLike } from "node:fs";
 
 import type {
+  DETECTION_ERROR_TYPE,
   DetectLanguage,
   LanguageDetection,
-  DETECTION_ERROR_TYPE,
-} from "./src/detect";
-import { DETECTION_ERROR } from "./src/detect";
+} from "./types/detect";
+import { DETECTION_ERROR } from "./types/detect";
 
-import { detectByExtension } from "./src/detectByExtension";
 import { detectByContent } from "./src/detectByContent";
+import { detectByExtension } from "./src/detectByExtension";
 
-import { languages } from "./language/provider";
 import { customReadStream } from "./src/fileHandler";
-import { detectedLanguage } from "./src/utils";
 
 /**
  * Applies heuristic analysis to determine the correct language when the file extension is ambiguous.
@@ -21,29 +19,25 @@ import { detectedLanguage } from "./src/utils";
  * - When a file extension maps to multiple possible languages.
  * - This function loads the file content and compares it against known heuristics for each candidate language.
  */
-export async function detectLanguage(
-  filePath: PathLike,
-): Promise<[DetectLanguage, DETECTION_ERROR_TYPE | null]> {
+export async function detectLanguage(filePath: PathLike): Promise<DetectLanguage | Error> {
   const extensionLanguages = detectByExtension(filePath);
 
   // check if there are multiple possible values
   if (extensionLanguages.length === 1) {
-    const lang = languages[extensionLanguages[0]];
-    const detLang = { language: lang, name: extensionLanguages[0] };
-    return [detectedLanguage(detLang, filePath), null];
+    return extensionLanguages[0];
   }
 
   const content = await customReadStream(filePath);
   if (content instanceof Error) {
-    return [detectedLanguage(null, filePath), DETECTION_ERROR.FILE_ERROR];
+    return content;
   }
 
   const contentLanguage = detectByContent(content, extensionLanguages);
   if (!contentLanguage) {
-    return [detectedLanguage(null, filePath), DETECTION_ERROR.UNKNOWN_LANGUAGE];
+    return new Error(DETECTION_ERROR.UNKNOWN_LANGUAGE);
   }
 
-  return [detectedLanguage(contentLanguage, filePath), null];
+  return contentLanguage;
 }
 
 /**
@@ -54,25 +48,20 @@ export async function detectLanguage(
  *
  * @param files - Array of file paths to analyze.
  */
-export async function detectLanguagesInFiles(
-  files: PathLike[],
-): Promise<LanguageDetection> {
-  const detectedLanguages: DetectLanguage[] = [];
-  const failedLanguages: DetectLanguage[] = [];
+export async function detectLanguagesInFiles(files: PathLike[]) {
+  const detected: DetectLanguage[] = [];
+  const failedPaths: PathLike[] = [];
 
   for (const file of files) {
-    const [detected, error] = await detectLanguage(file);
-    if (error) {
-      failedLanguages.push(detected);
+    const lang = await detectLanguage(file);
+    if (lang instanceof Error) {
+      failedPaths.push(file);
       continue;
     }
-    detectedLanguages.push(detected);
+    detected.push(lang);
   }
 
-  return {
-    detected: detectedLanguages,
-    failed: failedLanguages,
-  };
+  return { detected: detected, failed: failedPaths }
 }
 
 export {

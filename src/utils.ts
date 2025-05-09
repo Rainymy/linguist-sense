@@ -1,16 +1,17 @@
 import type { PathLike } from "node:fs";
 import path from "node:path";
 
-import type { RetreiveLanguage } from "../types/language";
-import type { DetectLanguage } from "./detect";
+import type { DetectLanguage } from "../types/detect";
+import type { Language } from "../types/language";
 
 export function detectedLanguage(
-  lang: RetreiveLanguage | null,
+  name: string,
+  lang: Language | null,
   path: PathLike
 ): DetectLanguage {
   return {
-    name: lang?.name ?? null,
-    language: lang?.language ?? null,
+    name: name,
+    language: lang ?? null,
     path: path
   }
 }
