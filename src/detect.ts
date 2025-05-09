@@ -8,8 +8,8 @@ export interface DetectLanguage {
 }
 
 export interface LanguageDetection {
-  detected: DetectLanguage[],
-  failed: DetectLanguage[]
+  detected: DetectLanguage[];
+  failed: DetectLanguage[];
 }
 
 export const DETECTION_ERROR = {

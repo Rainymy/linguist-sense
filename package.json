@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/Rainymy/linguist-sense",
   "devDependencies": {
-    "@types/node": "^22.15.3",
+    "@types/node": "^22.15.17",
     "esbuild": "^0.25.3",
     "esbuild-plugin-yaml": "^0.0.1",
     "typescript": "^5.8.3"

@@ -1,8 +1,8 @@
 import type { Heuristics } from "../types/heuristics";
 import type { LinguistLanguages } from "../types/language";
 
-import LanguageFile from "./languages.yml";
-import HeuristicsFile from "./heuristics.yml";
+import heuristicsFile from "./heuristics.yml";
+import languageFile from "./languages.yml";
 
-export const languages: typeof LinguistLanguages = LanguageFile;
-export const heuristics: Heuristics = HeuristicsFile;
+export const languages = languageFile as typeof LinguistLanguages;
+export const heuristics = heuristicsFile as Heuristics;

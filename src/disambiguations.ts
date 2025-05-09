@@ -1,7 +1,7 @@
 import { toRegExp } from "oniguruma-to-es";
 
 import { heuristics } from "../language/provider";
-import type { RulesEntity, NamedPatterns } from "../types/heuristics";
+import type { NamedPatterns, RulesEntity } from "../types/heuristics";
 
 export function disambiguations(fileContent: string, searchAt: string[]) {
   for (const disambiguation of heuristics.disambiguations) {
