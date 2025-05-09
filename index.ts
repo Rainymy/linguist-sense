@@ -1,16 +1,12 @@
 import type { PathLike } from "node:fs";
 
-import type {
-  DETECTION_ERROR_TYPE,
-  DetectLanguage,
-  LanguageDetection,
-} from "./src/detect";
+import type { DetectLanguage, LanguageDetection } from "./src/detect";
 import { DETECTION_ERROR } from "./src/detect";
 
 import { detectByContent } from "./src/detectByContent";
 import { detectByExtension } from "./src/detectByExtension";
 
-import { customReadStream } from "./src/fileHandler";
+import { customReadStream } from "./src/utils";
 
 /**
  * Applies heuristic analysis to determine the correct language when the file extension is ambiguous.
@@ -20,11 +16,11 @@ import { customReadStream } from "./src/fileHandler";
  * - This function loads the file content and compares it against known heuristics for each candidate language.
  */
 export async function detectLanguage(filePath: PathLike): Promise<DetectLanguage | Error> {
-  const extensionLanguages = detectByExtension(filePath);
+  const extensions = detectByExtension(filePath);
 
   // check if there are multiple possible values
-  if (extensionLanguages.length === 1) {
-    return extensionLanguages[0];
+  if (extensions.length === 1) {
+    return extensions[0];
   }
 
   const content = await customReadStream(filePath);
@@ -32,7 +28,7 @@ export async function detectLanguage(filePath: PathLike): Promise<DetectLanguage
     return content;
   }
 
-  const contentLanguage = detectByContent(content, extensionLanguages);
+  const contentLanguage = detectByContent(content, extensions);
   if (!contentLanguage) {
     return new Error(DETECTION_ERROR.UNKNOWN_LANGUAGE);
   }

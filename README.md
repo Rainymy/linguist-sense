@@ -29,16 +29,18 @@ const path = require("node:path");
 const { detectLanguage, DETECTION_ERROR } = require("linguist-sense");
 
 const file = path.join(__dirname, "./index.ts"); // input file
-const [value, error] = await detectLanguage(file);
+const language = await detectLanguage(file);
 
-if (error === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
-  console.log("Unknown language: ", value.path);
+if (language instanceof Error) {
+  if (language.message === DETECTION_ERROR.UNKNOWN_LANGUAGE) {
+    console.log("Unknown language detected");
+  }
+  else {
+    console.log("General error: from reading a file");
+  }
 }
-if (error === DETECTION_ERROR.FILE_ERROR) {
-  console.log("File not found", value.path);
-}
-if (error === null) {
-  console.log(value.name, value); // e.g., "TypeScript"
+else {
+  console.log(language); // { name: "TypeScript", language: Language }
 }
 ```
 
@@ -51,10 +53,10 @@ const path = require("node:path");
 const fs = require("node:fs");
 const { detectByExtension, detectByContent } = require("linguist-sense");
 
-const filepath = path.join(__dirname, "./index.ts");
+const filepath = path.join(__dirname, "./index.json");
 
 // Detect by extension
-const candidates = detectByExtension(filepath); // [ <detected languages> ]
+const candidates = detectByExtension(filepath);
 
 if (candidates.length === 0) {
   console.log("No language detected by extension.");
@@ -71,7 +73,7 @@ const fileContent = fs.readFileSync(filepath);
 const detected = detectByContent(fileContent, candidates /* optional but recommended */);
 
 if (detected) {
-  console.log("Final language:", detected.name); // { name, language }
+  console.log("Final language:", detected); // { name, language }
 }
 else {
   console.log("Unable to determine language from content.");

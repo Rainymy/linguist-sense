@@ -13,5 +13,3 @@ export interface LanguageDetection {
 export enum DETECTION_ERROR {
   UNKNOWN_LANGUAGE = "UNKNOWN_LANGUAGE",
 }
-
-export type DETECTION_ERROR_TYPE = keyof typeof DETECTION_ERROR;

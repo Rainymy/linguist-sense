@@ -1,5 +1,5 @@
 import type { PathLike } from "node:fs";
-import type { DetectLanguage } from "../types/detect";
+import type { DetectLanguage } from "./detect";
 
 import { languages } from "../language/provider";
 import { parseFilePath } from "./utils";

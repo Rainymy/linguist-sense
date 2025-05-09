@@ -1,24 +1,20 @@
-import type { PathLike } from "node:fs";
-import path from "node:path";
+import { type PathLike, createReadStream } from "node:fs";
+import { basename, extname } from "node:path";
 
-import type { DetectLanguage } from "../types/detect";
-import type { Language } from "../types/language";
+export function customReadStream(filePathFs: PathLike): Promise<Buffer | Error> {
+  return new Promise((resolve) => {
+    const data: Buffer[] = [];
 
-export function detectedLanguage(
-  name: string,
-  lang: Language | null,
-  path: PathLike
-): DetectLanguage {
-  return {
-    name: name,
-    language: lang ?? null,
-    path: path
-  }
+    const readStream = createReadStream(filePathFs, { flags: "r" });
+    readStream.on("data", (chunks) => { data.push(Buffer.from(chunks)) });
+    readStream.on("end", () => resolve(Buffer.concat(data)));
+    readStream.on("error", (error) => resolve(error));
+  });
 }
 
 export function parseFilePath(filepath: string) {
-  const filename = path.basename(filepath);
-  const ext = filename.startsWith('.') ? filename : path.extname(filename);
+  const filename = basename(filepath);
+  const ext = filename.startsWith('.') ? filename : extname(filename);
   return {
     dotExt: ext,
     ext: ext.startsWith('.') ? ext.slice(1) : ext,
