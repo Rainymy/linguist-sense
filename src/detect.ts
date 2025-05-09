@@ -1,4 +1,4 @@
-import type { Language } from "./language";
+import type { Language } from "../types/language";
 
 export interface DetectLanguage {
   name: string,
@@ -10,9 +10,8 @@ export interface LanguageDetection {
   failed: DetectLanguage[];
 }
 
-export const DETECTION_ERROR = {
-  FILE_ERROR: "FILE_ERROR",
-  UNKNOWN_LANGUAGE: "UNKNOWN_LANGUAGE",
-} as const;
+export enum DETECTION_ERROR {
+  UNKNOWN_LANGUAGE = "UNKNOWN_LANGUAGE",
+}
 
 export type DETECTION_ERROR_TYPE = keyof typeof DETECTION_ERROR;

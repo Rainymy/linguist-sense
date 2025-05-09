@@ -4,8 +4,8 @@ import type {
   DETECTION_ERROR_TYPE,
   DetectLanguage,
   LanguageDetection,
-} from "./types/detect";
-import { DETECTION_ERROR } from "./types/detect";
+} from "./src/detect";
+import { DETECTION_ERROR } from "./src/detect";
 
 import { detectByContent } from "./src/detectByContent";
 import { detectByExtension } from "./src/detectByExtension";
@@ -70,4 +70,4 @@ export {
   detectByExtension,
   detectByContent,
   DETECTION_ERROR,
-};
+}
