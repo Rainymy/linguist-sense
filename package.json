@@ -1,6 +1,6 @@
 {
   "name": "linguist-sense",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Lightweight JavaScript wrapper for GitHub Linguist’s language detection. Detects programming languages via file extensions and file content using Linguist’s official language definitions.",
   "type": "commonjs",
   "main": "./dist/cjs/index.js",
