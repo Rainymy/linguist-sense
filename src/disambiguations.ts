@@ -46,7 +46,7 @@ function parseRules(rules: RulesEntity, fileContent: string): boolean {
   return true;
 }
 
-function toRegex(patterns: string | string[]): RegExp {
+export function toRegex(patterns: string | string[]): RegExp {
   const reg = Array.isArray(patterns) ? patterns.join("|") : patterns;
 
   return toRegExp(reg, { accuracy: "strict" });

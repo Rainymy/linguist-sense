@@ -22,7 +22,7 @@ Detect languages from file extensions and file content using the official lingui
 ## 🧪 Usage
 
 ### 1. High-Level Detection
-The `detectLanguage()` function returns `[value, error]`. Use this when you want a full result in one call.
+Use this when you want a full result in one call.
 
 ```js
 const path = require("node:path");
@@ -40,7 +40,7 @@ if (language instanceof Error) {
   }
 }
 else {
-  console.log(language); // { name: "TypeScript", language: Language }
+  console.log(language); // { name: "TypeScript", language: LanguageDefinition }
 }
 ```
 
@@ -55,7 +55,7 @@ const { detectByExtension, detectByContent } = require("linguist-sense");
 
 const filepath = path.join(__dirname, "./index.json");
 
-// Detect by extension
+// Extension-based detection
 const candidates = detectByExtension(filepath);
 
 if (candidates.length === 0) {
@@ -70,7 +70,9 @@ if (candidates.length === 1) {
 
 // Multiple possible matches — disambiguate with file content
 const fileContent = fs.readFileSync(filepath);
-const detected = detectByContent(fileContent, candidates /* optional but recommended */);
+// Note: detectByContent uses the `name` property of each candidates.
+// - Other fields can be omitted or left empty.
+const detected = detectByContent(fileContent, candidates); /* candidates  optional but preferred */
 
 if (detected) {
   console.log("Final language:", detected); // { name, language }
@@ -79,6 +81,22 @@ else {
   console.log("Unable to determine language from content.");
 }
 ```
+---
+
+### 3. Low-Level Access and Customization
+Access raw definitions and regex patterns if needed.
+```js
+const { heuristics, languages, toRegex } = require("linguist-sense");
+
+const javascriptInfo = languages["Javascript"];
+
+// Linguist uses Ruby-compatible (PCRE) regex syntax
+const rules = heuristics.disambiguations[0].rules[0].pattern;
+
+// Convert Ruby (PCRE) regex into a valid JavaScript RegExp
+const jsRegex = toRegex(rules);
+```
+
 ---
 
 ## 📦 Package Design Notes

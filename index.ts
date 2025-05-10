@@ -6,7 +6,9 @@ import { DETECTION_ERROR } from "./src/detect";
 import { detectByContent } from "./src/detectByContent";
 import { detectByExtension } from "./src/detectByExtension";
 
+import { toRegex } from "./src/disambiguations";
 import { customReadStream } from "./src/utils";
+import { heuristics, languages } from "./language/provider";
 
 /**
  * Applies heuristic analysis to determine the correct language when the file extension is ambiguous.
@@ -66,4 +68,7 @@ export {
   detectByExtension,
   detectByContent,
   DETECTION_ERROR,
+  heuristics,
+  languages,
+  toRegex
 }
