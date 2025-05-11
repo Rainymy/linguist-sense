@@ -6,9 +6,9 @@ import { DETECTION_ERROR } from "./src/detect";
 import { detectByContent } from "./src/detectByContent";
 import { detectByExtension } from "./src/detectByExtension";
 
+import { heuristics, languages } from "./language/provider";
 import { toRegex } from "./src/disambiguations";
 import { customReadStream } from "./src/utils";
-import { heuristics, languages } from "./language/provider";
 
 /**
  * Applies heuristic analysis to determine the correct language when the file extension is ambiguous.
@@ -35,7 +35,7 @@ export async function detectLanguage(filePath: PathLike): Promise<DetectLanguage
     return new Error(DETECTION_ERROR.UNKNOWN_LANGUAGE);
   }
 
-  return contentLanguage;
+  return contentLanguage
 }
 
 /**

@@ -24,6 +24,6 @@ export function detectByExtension(filePath: PathLike): DetectLanguage[] {
       );
     })
     .map((item) => {
-      return { name: item, language: languages[item], path: filePath } satisfies DetectLanguage;
+      return { name: item, language: languages[item] } satisfies DetectLanguage;
     });
 }

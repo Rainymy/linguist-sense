@@ -11,12 +11,12 @@ export function disambiguations(fileContent: string, searchAt: DetectLanguage[])
     for (const rule of disambiguation.rules) {
       // skip all non-matching languages.
       const searchIsSearch = search.find(item => item === rule.language);
-      if (!searchIsSearch) {
+      if (search.length !== 0 && !searchIsSearch) {
         continue;
       }
       // match against rule set and return if true.
       if (parseRules(rule, fileContent)) {
-        return { rule: rule, path: searchIsSearch };
+        return rule
       }
     }
   }
